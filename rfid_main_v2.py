@@ -72,6 +72,9 @@ def fetch_staffid(uid):
     except:
         return None
 
+# === 全局缓存 ===
+last_scan_time = {}  # {(uid, zone): datetime}
+
 def handle_uid(uid, reader_ip):
     zone = READER_ZONE_MAPPING.get(reader_ip, "UNKNOWN")
     now = datetime.now()
@@ -81,6 +84,14 @@ def handle_uid(uid, reader_ip):
         print(f"⚠️ 未知或未登记卡片 {uid}，跳过记录")
         return
 
+    # 加入一分钟重复刷卡过滤机制
+    key = (uid, zone)
+    last_time = last_scan_time.get(key)
+    if last_time and (now - last_time).total_seconds() < 60:
+        print(f"⏱️ 忽略 {staffid} @ {zone}，刷卡间隔 < 60 秒")
+        return
+    last_scan_time[key] = now
+
     print(f"📍 {staffid} 刷卡 @ {zone} @ {now}")
     success = try_insert_online(
         "INSERT INTO rfid_log1 (rfid_id, staffid, zone, datetime_log) VALUES (%s, %s, %s, %s)",
@@ -88,6 +99,7 @@ def handle_uid(uid, reader_ip):
     )
     if not success:
         write_to_csv(uid, zone, now)
+
 
 def upload_offline_log():
     while True:
