@@ -94,7 +94,7 @@ def handle_uid(uid, reader_ip):
 
     print(f"📍 {staffid} 刷卡 @ {zone} @ {now}")
     success = try_insert_online(
-        "INSERT INTO rfid_log1 (rfid_id, staffid, zone, datetime_log) VALUES (%s, %s, %s, %s)",
+        "INSERT INTO rfid_log (rfid_id, staffid, zone, datetime_log) VALUES (%s, %s, %s, %s)",
         (uid, staffid, zone, now)
     )
     if not success:
@@ -119,7 +119,7 @@ def upload_offline_log():
                     retained.append(row)
                     continue
                 success = try_insert_online(
-                    "INSERT INTO rfid_log1 (rfid_id, staffid, zone, datetime_log) VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO rfid_log (rfid_id, staffid, zone, datetime_log) VALUES (%s, %s, %s, %s)",
                     (uid, staffid, zone, timestamp)
                 )
                 if not success:
@@ -168,3 +168,4 @@ def start_server():
 
 if __name__ == "__main__":
     start_server()
+
