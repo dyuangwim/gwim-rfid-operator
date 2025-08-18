@@ -14,9 +14,9 @@ CSV_CACHE_FILE = "rfid_offline_log.csv"
 READER_ZONE_MAPPING = {}
 
 DB_CONFIG = {
-    'host': '192.168.20.17',
-    'user': 'itadmin',
-    'password': 'itadmin@2018',
+    'host': '',
+    'user': '',
+    'password': '',
     'database': 'staff_gwidb',
     'charset': 'utf8mb4',
     'autocommit': True
@@ -197,3 +197,4 @@ def start_server():
 
 if __name__ == "__main__":
     start_server()
+
